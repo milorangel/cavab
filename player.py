@@ -1,13 +1,19 @@
 import pygame
 import math
 
+
 class Player(pygame.sprite.Sprite):
+    pre_positions = []
     positions = []
-    def __init__(self, position, color='blue', k_left = pygame.K_q,  k_right = pygame.K_d, k_boost = pygame.K_z):
+    instance_len = 0
+    def __init__(self, x, y, surface, color='blue', k_left = pygame.K_q,  k_right = pygame.K_d, k_boost = pygame.K_z):
         super().__init__()
-        self.x = position[0]
-        self.y = position[1]
-        Player.positions.append(position)
+        Player.instance_len += 1
+        self.instance_number = Player.instance_len
+        print('Player instance:', self.instance_number, '-> init...' )
+        self.x = x
+        self.y = y
+        self.surface = surface
 
         self.speed = 1
         self.angle = self.spawn_angle = 0
@@ -20,22 +26,18 @@ class Player(pygame.sprite.Sprite):
         self.visible = True
         self.color = color
 
-        self.k_boost_pressed = False
-        self.constant_boost_duration = self.boost_duration = 30
-        self.constant_boost_cooldown = self.boost_cooldown = 30
-        self.boost_on = False
-        self.boost_cooldown_done = True
+        #self.k_boost_pressed = False
+        #self.constant_boost_duration = self.boost_duration = 30
+        #self.constant_boost_cooldown = self.boost_cooldown = 30
+        #self.boost_on = False
+        #self.boost_cooldown_done = True
 
-
-
-
-
-    def draw(self, surface):
+    def draw(self):
         if self.visible:
             color = self.color
         else:
             color = 'white'
-        pygame.draw.circle(surface, color, (self.x, self.y), 1)
+        pygame.draw.circle(self.surface, color, (self.x, self.y), 2)
 
     def control(self):
         keys = pygame.key.get_pressed()
@@ -51,9 +53,36 @@ class Player(pygame.sprite.Sprite):
 
         self.x += dx
         self.y += dy
-        self.position = (self.x, self.y)
-        Player.positions.append(self.position)
 
+
+    def players_collisions(self):
+        self.x = round(self.x, 0)
+        self.y = round(self.y, 0)
+
+        if any((self.x, self.y) == pos for pos in Player.positions):
+            print(False)
+            return False
+        else:
+            Player.pre_positions.append((self.x, self.y))
+            if len(Player.pre_positions) > 10:
+                Player.positions.append(Player.pre_positions[0])
+                Player.pre_positions.remove(Player.pre_positions[0])
+            return True
+    def wall_collisions(self):
+        if self.x > self.surface.get_size()[0]:
+            return False
+
+        # --------------------------------------------------------------------------
+        #player_rect = pygame.Rect(self.x, self.y, 1, 1)
+        #for pos in Player.positions:
+        #    pos_rect = pygame.Rect(pos[0], pos[1], 1, 1)
+        #    if player_rect.colliderect(pos_rect):
+        #        print("Collision detected!")
+        #        return False
+        # -------------------------------------------------------------------
+        # if surface.get_at((int(self.x), int(self.y))) != '#000000':
+        #    return False
+        # return True
 
 
     def jump(self):
