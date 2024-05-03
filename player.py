@@ -1,26 +1,29 @@
 import pygame
 import math
-
+from random import randint
 
 class Player(pygame.sprite.Sprite):
     pre_positions = []
     positions = []
     instance_len = 0
+    spawn_rect = 50
     def __init__(self, x, y, surface, color=pygame.Color(0, 0, 255), k_left = pygame.K_q,  k_right = pygame.K_d, k_boost = pygame.K_z):
         super().__init__()
         Player.instance_len += 1
         self.instance_number = Player.instance_len
         print('Player instance:', self.instance_number, '-> init...' )
-        self.x = x
-        self.y = y
+
+        self.surface = surface
+
+        self.x = randint(Player.spawn_rect, self.surface.get_size()[0] - Player.spawn_rect)
+        self.y = randint(Player.spawn_rect, self.surface.get_size()[1] - Player.spawn_rect)
 
         self.x_colision = x
         self.y_colision = y
 
-        self.surface = surface
 
         self.speed = 1
-        self.angle = self.spawn_angle = 0
+        self.angle = self.spawn_angle = randint(0,359)
         self.angle_force = 0.04
 
         self.k_left = k_left
@@ -41,7 +44,7 @@ class Player(pygame.sprite.Sprite):
             color = self.color
         else:
             color = pygame.Color(255,255,255)
-        pygame.draw.circle(self.surface, (100,100,100), (int(self.x), int(self.y)), 2)
+        pygame.draw.circle(self.surface, color, (int(self.x), int(self.y)), 2)
 
     def control(self, keys):
 
@@ -63,21 +66,20 @@ class Player(pygame.sprite.Sprite):
         self.y_colision = round(self.y, 0)
 
         if any((self.x_colision, self.y_colision) == pos for pos in Player.positions):
-            print(False)
-            return False
+            return True
         else:
             Player.pre_positions.append((self.x_colision, self.y_colision))
             if len(Player.pre_positions) > 10:
                 Player.positions.append(Player.pre_positions[0])
                 Player.pre_positions.remove(Player.pre_positions[0])
-            return True
-
-
-    def wall_collisions(self):
-        if self.x > self.surface.get_size()[0]:
             return False
 
 
+    def wall_collisions(self):
+        if self.x < 0 or self.y < 0:
+            return True
+        if self.x > self.surface.get_size()[0] or self.y > self.surface.get_size()[1]:
+            return True
 
     def jump(self, keys):
 

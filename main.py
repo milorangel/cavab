@@ -23,10 +23,10 @@ def main():
         keys = pygame.key.get_pressed()
         for p in players:
             p.control(keys)
-            p.jump(keys)
+            #p.jump(keys)
 
 
-            if not p.players_collisions() :  # Si p.control() renvoie False, la boucle s'arrête
+            if p.players_collisions() or p.wall_collisions():  # Si p.control() renvoie False, la boucle s'arrête
                 running = False
                 break
 
