@@ -6,13 +6,17 @@ class Player(pygame.sprite.Sprite):
     pre_positions = []
     positions = []
     instance_len = 0
-    def __init__(self, x, y, surface, color='blue', k_left = pygame.K_q,  k_right = pygame.K_d, k_boost = pygame.K_z):
+    def __init__(self, x, y, surface, color=pygame.Color(0, 0, 255), k_left = pygame.K_q,  k_right = pygame.K_d, k_boost = pygame.K_z):
         super().__init__()
         Player.instance_len += 1
         self.instance_number = Player.instance_len
         print('Player instance:', self.instance_number, '-> init...' )
         self.x = x
         self.y = y
+
+        self.x_colision = x
+        self.y_colision = y
+
         self.surface = surface
 
         self.speed = 1
@@ -26,21 +30,20 @@ class Player(pygame.sprite.Sprite):
         self.visible = True
         self.color = color
 
-        #self.k_boost_pressed = False
-        #self.constant_boost_duration = self.boost_duration = 30
-        #self.constant_boost_cooldown = self.boost_cooldown = 30
-        #self.boost_on = False
-        #self.boost_cooldown_done = True
+        self.k_boost_pressed = False
+        self.constant_boost_duration = self.boost_duration = 30
+        self.constant_boost_cooldown = self.boost_cooldown = 30
+        self.boost_on = False
+        self.boost_cooldown_done = True
 
     def draw(self):
         if self.visible:
             color = self.color
         else:
-            color = 'white'
-        pygame.draw.circle(self.surface, color, (self.x, self.y), 2)
+            color = pygame.Color(255,255,255)
+        pygame.draw.circle(self.surface, (100,100,100), (int(self.x), int(self.y)), 2)
 
-    def control(self):
-        keys = pygame.key.get_pressed()
+    def control(self, keys):
 
         if keys[self.k_left]:
             self.angle -= self.angle_force
@@ -56,37 +59,27 @@ class Player(pygame.sprite.Sprite):
 
 
     def players_collisions(self):
-        self.x = round(self.x, 0)
-        self.y = round(self.y, 0)
+        self.x_colision = round(self.x, 0)
+        self.y_colision = round(self.y, 0)
 
-        if any((self.x, self.y) == pos for pos in Player.positions):
+        if any((self.x_colision, self.y_colision) == pos for pos in Player.positions):
             print(False)
             return False
         else:
-            Player.pre_positions.append((self.x, self.y))
+            Player.pre_positions.append((self.x_colision, self.y_colision))
             if len(Player.pre_positions) > 10:
                 Player.positions.append(Player.pre_positions[0])
                 Player.pre_positions.remove(Player.pre_positions[0])
             return True
+
+
     def wall_collisions(self):
         if self.x > self.surface.get_size()[0]:
             return False
 
-        # --------------------------------------------------------------------------
-        #player_rect = pygame.Rect(self.x, self.y, 1, 1)
-        #for pos in Player.positions:
-        #    pos_rect = pygame.Rect(pos[0], pos[1], 1, 1)
-        #    if player_rect.colliderect(pos_rect):
-        #        print("Collision detected!")
-        #        return False
-        # -------------------------------------------------------------------
-        # if surface.get_at((int(self.x), int(self.y))) != '#000000':
-        #    return False
-        # return True
 
 
-    def jump(self):
-        keys = pygame.key.get_pressed()
+    def jump(self, keys):
 
         # Si le cooldown du boost est terminé, le joueur peut activer le boost
         if self.boost_cooldown_done:
@@ -117,4 +110,3 @@ class Player(pygame.sprite.Sprite):
         # Rendre le joueur visible si aucune touche de déplacement n'est enfoncée et que le boost n'est pas activé
         if not any([keys[self.k_left], keys[self.k_right]]) and not self.boost_on:
             self.visible = True
-
