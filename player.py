@@ -23,7 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.y_colision = self.y
 
 
-        self.speed = 1
+        self.speed = self.speedup = 1
         self.angle = self.spawn_angle = randint(0,359)
         self.angle_force = 0.04
 
@@ -49,11 +49,11 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.circle(self.surface, color, (int(self.x), int(self.y)), 2)
 
     def control(self, keys):
-        """        if pygame.time.get_ticks() - self.last_speedup_time >= self.boost_duration:
-            self.speed = 1
+        if pygame.time.get_ticks() - self.last_speedup_time >= self.boost_duration:
+            self.speedup = 1
         if keys[self.k_speedup] and pygame.time.get_ticks() - self.last_speedup_time >= self.boost_delay:
             self.last_speedup_time = pygame.time.get_ticks()
-            self.speed = 2"""
+            self.speedup = 2
 
 
 
@@ -62,28 +62,26 @@ class Player(pygame.sprite.Sprite):
         if keys[self.k_right]:
             self.angle += self.angle_force
 
+        for _ in range(self.speedup):
+            dx = self.speed * math.cos(self.angle)
+            dy = self.speed * math.sin(self.angle)
 
-        dx = self.speed * math.cos(self.angle)
-        dy = self.speed * math.sin(self.angle)
+            self.x += dx
+            self.y += dy
 
-        self.x += dx
-        self.y += dy
-
-
-    def players_collisions(self):
-        self.x_colision = round(self.x, 0)
-        self.y_colision = round(self.y, 0)
-        if self.jumping:
-            self.jump_positions.append((self.x, self.y))
-        else:
-            if any((self.x_colision, self.y_colision) == pos for pos in Player.positions):
-                return True
+            self.x_colision = round(self.x, 0)
+            self.y_colision = round(self.y, 0)
+            if self.jumping:
+                self.jump_positions.append((self.x, self.y))
             else:
-                Player.pre_positions.append((self.x_colision, self.y_colision))
-                if len(Player.pre_positions) > 10:
-                    Player.positions.append(Player.pre_positions[0])
-                    Player.pre_positions.remove(Player.pre_positions[0])
-                return False
+                if any((self.x_colision, self.y_colision) == pos for pos in Player.positions):
+                    return True
+                else:
+                    Player.pre_positions.append((self.x_colision, self.y_colision))
+                    if len(Player.pre_positions) > 10:
+                        Player.positions.append(Player.pre_positions[0])
+                        Player.pre_positions.remove(Player.pre_positions[0])
+
     def wall_collisions(self):
         if self.x < 0 or self.y < 0:
             return True

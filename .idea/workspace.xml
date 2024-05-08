@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3e5cfb0c-185d-4495-abfd-0fec09ef3b6c" name="Changes" comment="Commit jump grey to black">
+    <list default="true" id="3e5cfb0c-185d-4495-abfd-0fec09ef3b6c" name="Changes" comment="Commit correct jump">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
@@ -169,7 +169,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715190796194</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="error">
+      <option name="closed" value="true" />
+      <created>1715193786972</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1715193786972</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -222,9 +230,10 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First commit" />
-    <MESSAGE value="error" />
     <MESSAGE value="Commit which work?" />
     <MESSAGE value="Commit jump grey to black" />
-    <option name="LAST_COMMIT_MESSAGE" value="Commit jump grey to black" />
+    <MESSAGE value="Commit correct jump" />
+    <MESSAGE value="error" />
+    <option name="LAST_COMMIT_MESSAGE" value="error" />
   </component>
 </project>

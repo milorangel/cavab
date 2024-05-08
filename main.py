@@ -21,10 +21,8 @@ def main():
 
         keys = pygame.key.get_pressed()
         for p in players:
-            p.control(keys)
             p.jump(keys)
-
-            if p.players_collisions() or p.wall_collisions():
+            if p.control(keys) or p.wall_collisions():
                 running = False
                 break
 
