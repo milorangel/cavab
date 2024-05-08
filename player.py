@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
     positions = []
     instance_len = 0
     spawn_rect = 100
-    def __init__(self, surface, color=pygame.Color(0, 0, 255), k_left = pygame.K_q,  k_right = pygame.K_d, k_boost = pygame.K_z):
+    def __init__(self, surface, color=(0, 0, 254), k_left = pygame.K_q,  k_right = pygame.K_d, k_boost = pygame.K_z, k_speedup = pygame.K_s):
         super().__init__()
         Player.instance_len += 1
         self.instance_number = Player.instance_len
@@ -30,24 +30,32 @@ class Player(pygame.sprite.Sprite):
         self.k_left = k_left
         self.k_right = k_right
         self.k_boost = k_boost
+        self.k_speedup = k_speedup
 
         self.jumping = False
         self.color = color
 
         self.boost_duration = 1000
         self.boost_delay = self.boost_duration + 1000
-        self.last_boost_time = -self.boost_delay
+        self.last_speedup_time = self.last_boost_time = -self.boost_delay
 
         self.jump_positions = []
 
     def draw(self):
         if self.jumping:
-            color = pygame.Color(100, 100, 100)
+            color = pygame.Color(self.color[0]//2, self.color[1]//2, self.color[2]//2)
         else:
-            color = self.color
+            color = pygame.Color(self.color)
         pygame.draw.circle(self.surface, color, (int(self.x), int(self.y)), 2)
 
     def control(self, keys):
+        """        if pygame.time.get_ticks() - self.last_speedup_time >= self.boost_duration:
+            self.speed = 1
+        if keys[self.k_speedup] and pygame.time.get_ticks() - self.last_speedup_time >= self.boost_delay:
+            self.last_speedup_time = pygame.time.get_ticks()
+            self.speed = 2"""
+
+
 
         if keys[self.k_left]:
             self.angle -= self.angle_force
@@ -85,9 +93,9 @@ class Player(pygame.sprite.Sprite):
     def jump(self, keys):
         if pygame.time.get_ticks() - self.last_boost_time >= self.boost_duration:
             self.jumping = False
-            for pos in self.jump_positions:
-                pygame.draw.circle(self.surface, pygame.Color(0, 0, 0), (int(pos[0]), int(pos[1])), 2)
-            self.jump_positions = []
+        if not self.jumping and self.jump_positions != []:
+            pygame.draw.circle(self.surface, pygame.Color(0, 0, 0), (int(self.jump_positions[0][0]), int(self.jump_positions[0][1])), 2)
+            self.jump_positions.pop(0)
         if keys[self.k_boost] and pygame.time.get_ticks() - self.last_boost_time >= self.boost_delay:
             self.last_boost_time = pygame.time.get_ticks()
             self.jumping = True
