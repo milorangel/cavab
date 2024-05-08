@@ -12,7 +12,7 @@ sc.fill(pygame.Color(0,0,0))
 
 def main():
 
-    players =[player.Player(100, 100, sc), player.Player(0, 0, sc, pygame.Color(255, 51, 255), pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP)]
+    players =[player.Player(sc), player.Player(sc, pygame.Color(255, 51, 255), pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP)]
 
     clock = pygame.time.Clock()
 
@@ -23,10 +23,9 @@ def main():
         keys = pygame.key.get_pressed()
         for p in players:
             p.control(keys)
-            #p.jump(keys)
+            p.jump(keys)
 
-
-            if p.players_collisions() or p.wall_collisions():  # Si p.control() renvoie False, la boucle s'arrête
+            if p.players_collisions() or p.wall_collisions():
                 running = False
                 break
 
