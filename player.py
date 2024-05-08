@@ -82,6 +82,7 @@ class Player(pygame.sprite.Sprite):
                         Player.positions.append(Player.pre_positions[0])
                         Player.pre_positions.remove(Player.pre_positions[0])
 
+
     def wall_collisions(self):
         if self.x < 0 or self.y < 0:
             return True
