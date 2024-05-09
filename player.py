@@ -8,6 +8,7 @@ class Player(pygame.sprite.Sprite):
     positions = []
     instance_len = 0
     spawn_rect = 100
+    players_colors = []
     def __init__(self, surface, color=(0, 0, 254), k_left = pygame.K_q,  k_right = pygame.K_d, k_boost = pygame.K_z, k_speedup = pygame.K_s):
         super().__init__()
         Player.instance_len += 1
@@ -22,7 +23,6 @@ class Player(pygame.sprite.Sprite):
         self.x_colision = self.x
         self.y_colision = self.y
 
-
         self.speed = self.speedup = 1
         self.angle = self.spawn_angle = randint(0,359)
         self.angle_force = 0.04
@@ -34,6 +34,7 @@ class Player(pygame.sprite.Sprite):
 
         self.jumping = False
         self.color = color
+        Player.players_colors.append(color)
 
         self.boost_duration = 1000
         self.boost_delay = self.boost_duration + 1000
@@ -55,8 +56,6 @@ class Player(pygame.sprite.Sprite):
             self.last_speedup_time = pygame.time.get_ticks()
             self.speedup = 2
 
-
-
         if keys[self.k_left]:
             self.angle -= self.angle_force
         if keys[self.k_right]:
@@ -69,18 +68,16 @@ class Player(pygame.sprite.Sprite):
             self.x += dx
             self.y += dy
 
-            self.x_colision = round(self.x, 0)
-            self.y_colision = round(self.y, 0)
+            pixel_color = self.surface.get_at((int(self.x), int(self.y)))
+
             if self.jumping:
                 self.jump_positions.append((self.x, self.y))
+
             else:
-                if any((self.x_colision, self.y_colision) == pos for pos in Player.positions):
-                    return True
-                else:
-                    Player.pre_positions.append((self.x_colision, self.y_colision))
-                    if len(Player.pre_positions) > 10:
-                        Player.positions.append(Player.pre_positions[0])
-                        Player.pre_positions.remove(Player.pre_positions[0])
+                for col in Player.players_colors:
+                    if pixel_color == col:
+                        return True
+
 
 
     def wall_collisions(self):
