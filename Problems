@@ -1,3 +1,13 @@
+draw
+control
+collisions
+speed control
+jump
+double
+other boosts
+
+i'd like to modify parameters by executing the one methode that control the parameter(or the boost)
+
 In player.py
 Control Methode:
     -Control
@@ -5,7 +15,9 @@ Control Methode:
     -Collisions with other players
     -Use jumping methode too
 
+how to isolate each functionality?
 
+_______________________________________________________
 commits:
 feature: Ajout d’une nouvelle fonctionnalité;
 bugfix: Correction d’un bug;
