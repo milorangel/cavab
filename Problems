@@ -4,3 +4,23 @@ Control Methode:
     -Speedup
     -Collisions with other players
     -Use jumping methode too
+
+
+commits:
+feature: Ajout d’une nouvelle fonctionnalité;
+bugfix: Correction d’un bug;
+hotfix: Correction d’un bug critique;
+chore: Nettoyage du code;
+experiment: Expérimentation de fonctionnalités.
+
+feat: Ajout d’une nouvelle fonctionnalité;
+fix: Correction d’un bug;
+build: Changement lié au système de build ou qui concerne les dépendances (npm, grunt, gulp, webpack, etc.).
+ci: Changement concernant le système d’intégration et de déploiement continu (Jenkins, Travis, Ansible, gitlabCI, etc.)
+docs: Ajout ou modification de documentation (README, JSdoc, etc.);
+perf: Amélioration des performances;
+refactor: Modification n’ajoutant pas de fonctionnalités ni de correction de bug (renommage d’une variable, suppression de code redondant, simplification du code, etc.);
+style: Changement lié au style du code (indentation, point virgule, etc.);
+test: Ajout ou modification de tests;
+revert: Annulation d’un précédent commit;
+chore: Toute autre modification (mise à jour de version par exemple).
