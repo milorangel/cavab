@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         Player.instances.append(self)
         self.instance_number = len(Player.instances)
-        print('Player instance:', self.instance_number, '-> init...' )
+        print('Player instance:', self.instance_number, '-> init...')
 
         self.surface = surface
 
@@ -50,6 +50,8 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.circle(self.surface, color, (int(self.x), int(self.y)), 2)
 
     def control(self, keys):
+
+        #
         if pygame.time.get_ticks() - self.last_speedup_time >= self.boost_duration:
             self.speedup = 1
         if keys[self.k_speedup] and pygame.time.get_ticks() - self.last_speedup_time >= self.boost_delay:
@@ -57,11 +59,13 @@ class Player(pygame.sprite.Sprite):
             self.speedup = 2
 
         if keys[self.k_left]:
-            self.angle -= self.angle_force
+            self.angle -= self.angle_force*self.speedup
         if keys[self.k_right]:
-            self.angle += self.angle_force
+            self.angle += self.angle_force*self.speedup
 
         for _ in range(self.speedup):
+
+            # calcules de coordonnées
             dx = self.pixel_nb_for_move * math.cos(self.angle)
             dy = self.pixel_nb_for_move * math.sin(self.angle)
 
@@ -70,6 +74,8 @@ class Player(pygame.sprite.Sprite):
 
             self.x_collision = round(self.x, 0)
             self.y_collision = round(self.y, 0)
+
+            # collision
             if self.jumping:
                 self.jump_positions.append((self.x, self.y))
             else:
