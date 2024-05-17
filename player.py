@@ -51,13 +51,14 @@ class Player(pygame.sprite.Sprite):
 
     def control(self, keys):
 
-        #
+        # speed up control
         if pygame.time.get_ticks() - self.last_speedup_time >= self.boost_duration:
             self.speedup = 1
         if keys[self.k_speedup] and pygame.time.get_ticks() - self.last_speedup_time >= self.boost_delay:
             self.last_speedup_time = pygame.time.get_ticks()
             self.speedup = 2
 
+        # control
         if keys[self.k_left]:
             self.angle -= self.angle_force*self.speedup
         if keys[self.k_right]:
