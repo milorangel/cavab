@@ -3,14 +3,13 @@ import math
 import pygame.time
 from random import randint
 
-
 class Player(pygame.sprite.Sprite):
     pre_positions = []
     positions = []
     instances = []
     spawn_rect = 100
 
-    def __init__(self, surface, color=(0, 0, 254), k_left=pygame.K_q,  k_right=pygame.K_d, k_boost=pygame.K_z, k_speedup=pygame.K_s):
+    def __init__(self, surface, color=(0, 0, 254), k_left=pygame.K_q,  k_right=pygame.K_d, k_boost=pygame.K_z, k_speedup=pygame.K_s, k_double=pygame.K_f):
         super().__init__()
         Player.instances.append(self)
         self.instance_number = len(Player.instances)
@@ -18,8 +17,7 @@ class Player(pygame.sprite.Sprite):
 
         self.surface = surface
 
-        self.x = randint(Player.spawn_rect, self.surface.get_size()[0] - Player.spawn_rect)
-        self.y = randint(Player.spawn_rect, self.surface.get_size()[1] - Player.spawn_rect)
+        self.new_pos()
 
         self.x_collision = self.x
         self.y_collision = self.y
@@ -33,6 +31,8 @@ class Player(pygame.sprite.Sprite):
         self.k_boost = k_boost
         self.k_speedup = k_speedup
 
+        self.double = False
+
         self.jumping = False
         self.color = color
 
@@ -42,6 +42,9 @@ class Player(pygame.sprite.Sprite):
 
         self.jump_positions = []
 
+    def new_pos(self):
+        self.x = randint(Player.spawn_rect, self.surface.get_size()[0] - Player.spawn_rect)
+        self.y = randint(Player.spawn_rect, self.surface.get_size()[1] - Player.spawn_rect)
     def draw(self):
         if self.jumping:
             color = pygame.Color(self.color[0]//2, self.color[1]//2, self.color[2]//2)
@@ -87,6 +90,7 @@ class Player(pygame.sprite.Sprite):
                     if len(Player.pre_positions) > 10:
                         Player.positions.append(Player.pre_positions[0])
                         Player.pre_positions.remove(Player.pre_positions[0])
+            self.draw()
 
     def wall_collisions(self):
         if self.x < 0 or self.y < 0:
