@@ -30,8 +30,11 @@ class Player(pygame.sprite.Sprite):
         self.k_right = k_right
         self.k_boost = k_boost
         self.k_speedup = k_speedup
+        self.k_double = k_double
 
         self.double = False
+        self.double_x = self.x
+        self.double_y = self.y
 
         self.jumping = False
         self.color = color
@@ -46,12 +49,14 @@ class Player(pygame.sprite.Sprite):
         self.x = randint(Player.spawn_rect, self.surface.get_size()[0] - Player.spawn_rect)
         self.y = randint(Player.spawn_rect, self.surface.get_size()[1] - Player.spawn_rect)
     def draw(self):
+
         if self.jumping:
             color = pygame.Color(self.color[0]//2, self.color[1]//2, self.color[2]//2)
         else:
             color = pygame.Color(self.color)
         pygame.draw.circle(self.surface, color, (int(self.x), int(self.y)), 2)
-
+        if self.double:
+            pygame.draw.circle(self.surface, color, (int(self.double_x), int(self.double_y)), 2)
     def control(self, keys):
 
         # speed up control
@@ -66,18 +71,41 @@ class Player(pygame.sprite.Sprite):
             self.angle -= self.angle_force*self.speedup
         if keys[self.k_right]:
             self.angle += self.angle_force*self.speedup
+        if keys[self.k_double]:
+            self.double = True
 
         for _ in range(self.speedup):
 
-            # calcules de coordonnées
-            dx = self.pixel_nb_for_move * math.cos(self.angle)
-            dy = self.pixel_nb_for_move * math.sin(self.angle)
+            if self.double:
+                self.double_angle = 0.2
+            else:
+                self.double_angle = 0
 
+            dx = self.pixel_nb_for_move * math.cos(self.angle+self.double_angle)
+            dy = self.pixel_nb_for_move * math.sin(self.angle+self.double_angle)
             self.x += dx
             self.y += dy
-
             self.x_collision = round(self.x, 0)
             self.y_collision = round(self.y, 0)
+            if self.double:
+                double_dx = self.pixel_nb_for_move * math.cos(self.angle - self.double_angle)
+                double_dy = self.pixel_nb_for_move * math.sin(self.angle - self.double_angle)
+                self.double_x += double_dx
+                self.double_y += double_dy
+                self.x_collision = round(self.x, 0)
+                self.y_collision = round(self.y, 0)
+            else:
+                self.double_x = self.x
+                self.double_y = self.y
+                self.double_x_collision = round(self.x, 0)
+                self.double_y_collision = round(self.y, 0)
+
+            if self.double_y == self.y:
+                print(True)
+
+
+
+
 
             # collision
             if self.jumping:

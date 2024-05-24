@@ -12,7 +12,7 @@ sc.fill(pygame.Color(0, 0, 0))
 
 
 def main():
-    playing = True
+    playing = False
 
     player.Player(sc)
     player.Player(sc, (254, 50, 50), pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_RSHIFT)
@@ -20,6 +20,7 @@ def main():
     button1 = btn.Button(sc_center, caption='STAR', scale=7)
 
     clock = pygame.time.Clock()
+    last_start_stop = 0
 
     running = True
     while running:
@@ -27,8 +28,9 @@ def main():
 
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and pygame.time.get_ticks()-last_start_stop > 100:
             playing = not playing
+            last_start_stop = pygame.time.get_ticks()
 
         if playing:
             for p in player.Player.instances:
@@ -36,6 +38,7 @@ def main():
                 if p.control(keys) or p.wall_collisions():
                     playing = False
                     break
+
 
         else:
             sc.fill(pygame.Color(0, 0, 0))
