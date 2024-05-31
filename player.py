@@ -35,6 +35,7 @@ class Player(pygame.sprite.Sprite):
         self.double = False
         self.double_x = self.x
         self.double_y = self.y
+        self.double_positions = 
 
         self.jumping = False
         self.color = color
@@ -85,40 +86,33 @@ class Player(pygame.sprite.Sprite):
             dy = self.pixel_nb_for_move * math.sin(self.angle+self.double_angle)
             self.x += dx
             self.y += dy
-            self.x_collision = round(self.x, 0)
-            self.y_collision = round(self.y, 0)
+
+            self.collision(round(self.x, 0), round(self.y, 0), self.positions)
+
             if self.double:
                 double_dx = self.pixel_nb_for_move * math.cos(self.angle - self.double_angle)
                 double_dy = self.pixel_nb_for_move * math.sin(self.angle - self.double_angle)
                 self.double_x += double_dx
                 self.double_y += double_dy
-                self.x_collision = round(self.x, 0)
-                self.y_collision = round(self.y, 0)
+
+                self.collision(round(self.double_x, 0), round(self.double_y, 0), self.double_positions)
             else:
                 self.double_x = self.x
                 self.double_y = self.y
-                self.double_x_collision = round(self.x, 0)
-                self.double_y_collision = round(self.y, 0)
-
-            if self.double_y == self.y:
-                print(True)
 
 
-
-
-
-            # collision
-            if self.jumping:
-                self.jump_positions.append((self.x, self.y))
+    def collision(self, x, y, positions):
+        if self.jumping:
+            self.jump_positions.append((x, y))
+        else:
+            if any((x, y) == pos for pos in positions):
+                return True
             else:
-                if any((self.x_collision, self.y_collision) == pos for pos in Player.positions):
-                    return True
-                else:
-                    Player.pre_positions.append((self.x_collision, self.y_collision))
-                    if len(Player.pre_positions) > 10:
-                        Player.positions.append(Player.pre_positions[0])
-                        Player.pre_positions.remove(Player.pre_positions[0])
-            self.draw()
+                Player.pre_positions.append((x, y))
+                if len(Player.pre_positions) > 10:
+                    Player.positions.append(Player.pre_positions[0])
+                    Player.pre_positions.remove(Player.pre_positions[0])
+        self.draw()
 
     def wall_collisions(self):
         if self.x < 0 or self.y < 0:
